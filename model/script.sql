@@ -38,7 +38,8 @@ CREATE TABLE Ventas (
     total DECIMAL(10,2) NOT NULL,
     cliente_id INTEGER REFERENCES Clientes(cliente_id),
     cod_producto INTEGER REFERENCES Productos(producto_id),
-    cantidad INTEGER NOT NULL CHECK (cantidad > 0)
+    cantidad INTEGER NOT NULL CHECK (cantidad > 0),
+    nombre_cliente VARCHAR(100)
 );
 
 

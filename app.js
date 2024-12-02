@@ -79,9 +79,9 @@ app.get("/clientes", async (req, res) => {
 app.post("/clientes", async (req, res) => {
   const { nombre, contacto, direccion, telefono, correo } = req.body;
   try{
-    const query = "INSERT INTO Clientes (nombre, contacto, direccion, telefono, correo) VALUES ($1, $2, $3, $4, $5)";
-    await pool.query(query, [nombre, contacto, direccion, telefono, correo]);
-    res.status(200).json({ message: "Cliente creado exitosamente" });
+    const query = "INSERT INTO Clientes (nombre, contacto, direccion, telefono, correo) VALUES ($1, $2, $3, $4, $5) RETURNING cliente_id";
+    const result = await pool.query(query, [nombre, contacto, direccion, telefono, correo]);
+    res.status(200).json({ message: "Cliente creado exitosamente", id: result.rows[0].cliente_id});
   } catch (error) {
     console.error("Error al crear cliente:", error);
     res.status(500).json({ error: error.message });
@@ -174,6 +174,18 @@ app.get("/ventas", async (req, res) => {
   }
 });
 
+
+app.post("/ventas", async (req, res) => {
+  const { total, cliente_id, cod_producto, cantidad, nombre_cliente } = req.body;
+  try{
+    const query = "INSERT INTO Ventas (total, cliente_id, cod_producto, cantidad, nombre_cliente) VALUES ($1, $2, $3, $4, $5)";
+    await pool.query(query, [total, cliente_id, cod_producto, cantidad, nombre_cliente]);
+    res.status(200).json({ message: "Venta creada exitosamente" });
+  } catch (error) {
+    console.error("Error al crear venta:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 
